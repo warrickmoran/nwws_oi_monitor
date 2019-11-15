@@ -184,6 +184,13 @@ def animate(x, ani = None):
             ax.clear()
             ax.xaxis.set_major_locator(MultipleLocator(int((ani.interval/60)*5)))
             ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
+            
+            # For the minor ticks, use no labels; default NullFormatter.
+            ax.xaxis.set_minor_locator(MultipleLocator(5))
+            ax.yaxis.set_minor_locator(MultipleLocator(1))
+            ax.yaxis.set_minor_formatter(FormatStrFormatter('%.2f'))
+            
+            
             ax.plot(xs, ys, 'o-')
             start, end = ax.get_xlim()
             #ax.xaxis.set_ticks(np.arange(start, end, (ani.interval/60)*5))
@@ -214,13 +221,10 @@ def animate(x, ani = None):
             ay.clear()
             ay.xaxis.set_major_locator(MultipleLocator(int((ani.interval/60)*5)))
             ay.xaxis.set_major_formatter(FormatStrFormatter('%d'))
-            ay.yaxis.set_major_locator(MultipleLocator(2))
-            ay.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
             
 
             # For the minor ticks, use no labels; default NullFormatter.
             ay.xaxis.set_minor_locator(MultipleLocator(5))
-            ay.yaxis.set_minor_locator(MultipleLocator(1))
             
             ay.plot(xs, zs, '*-')
             ay.grid()
