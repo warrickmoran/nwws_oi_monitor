@@ -1,5 +1,19 @@
 # nwws_oi_monitor
 
+## Python Requirements
+* Version +3.6
+* Packages
+** sleekxmpp
+** matplotlib
+** numpy
+** pyinstaller (if creating executable)
+
+## Python Linux OS Requirements
+* python3-tkinter
+* python3-devel
+*
+
+
 
 ## Executable creation using pyinstaller 
 
