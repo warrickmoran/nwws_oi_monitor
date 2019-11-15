@@ -20,7 +20,7 @@ class OIMetrics_Rate(object):
     '''
 
 
-    def __init__(self, muc: MUCBOT, interval=5):
+    def __init__(self, muc: MUCBOT, interval=1):
         '''
         Constructor
         '''

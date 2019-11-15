@@ -181,39 +181,40 @@ def animate(x, ani = None):
             # Draw x and y lists
             ax.clear()
             ax.plot(xs, ys, 'o-')
+            start, end = ax.get_xlim()
+            ax.xaxis.set_ticks(np.arange(start, end, (ani.interval/60)*5))
             ax.grid()
             for x in ani.avg:
                 if (oi_ip_1 is None):
                     oi_ip_1 = x
-                    ax.annotate(oi_ip_1[2],
+                    ax.annotate(oi_ip_1[3],
                                 xy=(x[0], x[1]), xycoords='data',
-                                xytext=(-15, 25), textcoords='offset points',
+                                xytext=(15, 25), textcoords='offset points',
                                 arrowprops=dict(facecolor='black', shrink=0.05),
-                                horizontalalignment='right', verticalalignment='bottom')
-                elif oi_ip_1[2] != x[2]:
-                    ax.annotate(x[2],
+                                horizontalalignment='left', verticalalignment='bottom')
+                elif oi_ip_1[3] != x[3]:
+                    ax.annotate(x[3],
                                 xy=(x[0], x[1]), xycoords='data',
-                                xytext=(-15, 25), textcoords='offset points',
+                                xytext=(15, 25), textcoords='offset points',
                                 arrowprops=dict(facecolor='black', shrink=0.05),
-                                horizontalalignment='right', verticalalignment='bottom')
+                                horizontalalignment='left', verticalalignment='bottom')
                     break;
 
             # Format plot
             plt.subplot(2,1,1)
             plt.tight_layout(pad=4.0)
-            plt.xticks(rotation=45, ha='right')
-            plt.xticks(np.arange(min(xs), max(xs)+1, (ani.interval/60)*5))
+            #plt.xticks(np.arange(min(xs), max(xs)+1, step=int(ani.interval/60)*5),rotation=45, ha='right')
             plt.title('Average Product Ingest Rate')
             plt.ylabel('Products / {}min'.format(ani.interval/60))
             
             ay.clear()
             ay.plot(xs, zs, '*-')
+            ay.xaxis.set_ticks(np.arange(start, end, (ani.interval/60)*5))
             ay.grid()
             
             plt.subplot(2,1,2)
             plt.tight_layout(pad=4.0)
-            plt.xticks(rotation=45, ha='right')
-            plt.xticks(np.arange(min(xs), max(xs)+1, (ani.interval)/60*5))
+            #plt.xticks(np.arange(min(xs), max(xs)+1, step=int(ani.interval/60)*5),rotation=45, ha='right')
             plt.title('Presence Count')
             plt.ylabel('Presence / {}min'.format(ani.interval/60))
             
