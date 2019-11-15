@@ -214,9 +214,13 @@ def animate(x, ani = None):
             ay.clear()
             ay.xaxis.set_major_locator(MultipleLocator(int((ani.interval/60)*5)))
             ay.xaxis.set_major_formatter(FormatStrFormatter('%d'))
+            ay.yaxis.set_major_locator(MultipleLocator(2))
+            ay.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+            
 
             # For the minor ticks, use no labels; default NullFormatter.
             ay.xaxis.set_minor_locator(MultipleLocator(5))
+            ay.yaxis.set_minor_locator(MultipleLocator(1))
             
             ay.plot(xs, zs, '*-')
             ay.grid()
