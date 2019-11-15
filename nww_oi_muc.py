@@ -26,6 +26,8 @@ import getpass
 import threading
 import datetime
 import numpy as np
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator)
 from threading import Timer
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -180,9 +182,11 @@ def animate(x, ani = None):
             
             # Draw x and y lists
             ax.clear()
+            ax.xaxis.set_major_locator(MultipleLocator(int((ani.interval/60)*5)))
+            ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
             ax.plot(xs, ys, 'o-')
             start, end = ax.get_xlim()
-            ax.xaxis.set_ticks(np.arange(start, end, (ani.interval/60)*5))
+            #ax.xaxis.set_ticks(np.arange(start, end, (ani.interval/60)*5))
             ax.grid()
             for x in ani.avg:
                 if (oi_ip_1 is None):
@@ -203,13 +207,18 @@ def animate(x, ani = None):
             # Format plot
             plt.subplot(2,1,1)
             plt.tight_layout(pad=4.0)
-            #plt.xticks(np.arange(min(xs), max(xs)+1, step=int(ani.interval/60)*5),rotation=45, ha='right')
+            
             plt.title('Average Product Ingest Rate')
             plt.ylabel('Products / {}min'.format(ani.interval/60))
             
             ay.clear()
+            ay.xaxis.set_major_locator(MultipleLocator(int((ani.interval/60)*5)))
+            ay.xaxis.set_major_formatter(FormatStrFormatter('%d'))
+
+            # For the minor ticks, use no labels; default NullFormatter.
+            ay.xaxis.set_minor_locator(MultipleLocator(5))
+            
             ay.plot(xs, zs, '*-')
-            ay.xaxis.set_ticks(np.arange(start, end, (ani.interval/60)*5))
             ay.grid()
             
             plt.subplot(2,1,2)
