@@ -8,6 +8,12 @@ import logging
 import socket
 from sleekxmpp.exceptions import IqError, IqTimeout
 from threading import Timer
+import ssl
+from nww_oi_muc_stanza import X as Stanza
+from sleekxmpp.xmlstream.stanzabase import register_stanza_plugin
+from sleekxmpp.xmlstream.matcher import StanzaPath
+from sleekxmpp.xmlstream.handler.callback import Callback
+from sleekxmpp import Message
 
 # Create a custom logger
 logger = logging.getLogger(__name__)
@@ -21,11 +27,17 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def __init__(self, jid, password, room, nick, OI_URL):
         sleekxmpp.ClientXMPP.__init__(self, jid, password)
+        #sleekxmpp.ssl_version = ssl.PROTOCOL_SSLv3
 
         self.jid
         self.room = room
         self.nick = "OPPSD.SEIT.OIMONITOR-{}/v1.0(http://n.a;warrick.moran@noaa.gov)".format(nick)
         self.url = OI_URL
+        
+        register_stanza_plugin(Message, Stanza)
+        self.registerHandler(Callback('NWWS-OI/X Message', StanzaPath('{%s}message/{%s}x' % (self.default_ns,self.default_ns)),self.onX))
+
+        
         # The session_start event will be triggered when
         # the bot establishes its connection with the server
         # and the XML streams are ready for use. We want to
@@ -37,7 +49,8 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # stanza is received from any chat room. If you also also
         # register a handler for the 'message' event, MUC messages
         # will be processed by both handlers.
-        self.add_event_handler("groupchat_message", self.muc_message)
+        #self.add_event_handler("groupchat_message", self.muc_message)
+        self.add_event_handler("custom_action", self.muc_message)
         
         self.add_event_handler("presence_available", self.muc_online)
         
@@ -56,6 +69,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.member_list_complete = False
         self.product_count = 0
         
+
+    def onX(self, msg):
+        self.event('custom_action', msg)
+        logger.debug("Received Custom Action: {}", (msg))
 
     def start(self, event):
         """
@@ -143,6 +160,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         
     def muc_disconnected(self, event):
         logger.info("Disconnected")
+        self.member_list.clear()
     
     def muc_message(self, msg):
         """
@@ -172,6 +190,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         #                      mtype='groupchat')
         #print("Received Message: {}".format(msg['body']))
         self.product_count += 1
+        logger.info("Product Content: {}".format(msg['x']))
 
     def muc_online(self, presence):
         """
@@ -185,12 +204,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         documentation for the Presence stanza
                         to see how else it may be used.
         """
+        logger.info("Online {}".format(presence['from']))
         if not presence['from'].__str__() in self.member_list:
             self.member_list.append(presence['from'].__str__())
             logger.debug("{},{},{}".format(socket.gethostbyname(self.url),len(self.member_list),self.member_list))
             
     def muc_offline(self, presence):
-        logger.debug("Offline {}".format(presence['from']))
+        logger.info("Offline {}".format(presence['from']))
         
         if presence['from'].__str__() in self.member_list:
                 self.member_list.remove(presence['from'].__str__())

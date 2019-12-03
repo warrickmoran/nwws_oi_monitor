@@ -40,6 +40,8 @@ from sys import exit
 
 from optparse import OptionParser
 
+import ssl
+
 
 raw_input = input
 # Create a custom logger
@@ -118,11 +120,13 @@ def main(argv=None):
         global metrics
         global sleek_oi
         xmpp = bot.MUCBot(opts.jid, opts.password, opts.room, opts.nick,OI_URL)
+        
         sleek_oi = threading.Thread(target=sleek)
         sleek_oi.start()
         
         if (opts.metrics):
             metrics = rate.OIMetrics_Rate(xmpp)
+            
             global fig
             fig = plt.figure()
             
@@ -136,7 +140,8 @@ def main(argv=None):
             ax = fig.add_subplot(2,1,1) 
             ay = fig.add_subplot(2,1,2)
             graph = animation.FuncAnimation(fig, animate,interval=10000, fargs=(metrics,))
-            plt.tight_layout()
+            plt.tight_layout(pad=4.0)
+            
             plt.show()
 
     except Exception as e:
@@ -178,7 +183,18 @@ def animate(x, ani = None):
             ys = ani.avg[:100, 1]
             zs = ani.avg[:100, 2]
             
+            xs.sort()
+            ys.sort()
+            
+            global oi_ip_1
+            global oi_ip_2
             oi_ip_1 = None
+            oi_ip_2 = None
+            
+            # Format plot
+            #plt.subplot(2,1,1)
+            
+            #plt.tight_layout(pad=4.0)
             
             # Draw x and y lists
             ax.clear()
@@ -187,12 +203,15 @@ def animate(x, ani = None):
             
             # For the minor ticks, use no labels; default NullFormatter.
             ax.xaxis.set_minor_locator(MultipleLocator(5))
-            ax.yaxis.set_minor_locator(MultipleLocator(1))
+            ax.yaxis.set_minor_locator(MultipleLocator(5))
             ax.yaxis.set_minor_formatter(FormatStrFormatter('%.2f'))
+            #ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+            ax.set_title('Average Product Ingest Rate')
+            ax.set_ylabel('Products / {}min'.format(ani.interval/60))
             
             
             ax.plot(xs, ys, 'o-')
-            start, end = ax.get_xlim()
+
             #ax.xaxis.set_ticks(np.arange(start, end, (ani.interval/60)*5))
             ax.grid()
             for x in ani.avg:
@@ -203,7 +222,8 @@ def animate(x, ani = None):
                                 xytext=(15, 25), textcoords='offset points',
                                 arrowprops=dict(facecolor='black', shrink=0.05),
                                 horizontalalignment='left', verticalalignment='bottom')
-                elif oi_ip_1[3] != x[3]:
+                elif ((oi_ip_2 is None) and (oi_ip_1[3] != x[3])):
+                    oi_ip_2 = x
                     ax.annotate(x[3],
                                 xy=(x[0], x[1]), xycoords='data',
                                 xytext=(15, 25), textcoords='offset points',
@@ -212,12 +232,14 @@ def animate(x, ani = None):
                     break;
 
             # Format plot
-            plt.subplot(2,1,1)
-            plt.tight_layout(pad=4.0)
+            #plt.subplot(2,1,1)
+            #plt.tight_layout(pad=4.0)
             
-            plt.title('Average Product Ingest Rate')
-            plt.ylabel('Products / {}min'.format(ani.interval/60))
-            
+            #plt.title('Average Product Ingest Rate')
+            #plt.ylabel('Products / {}min'.format(ani.interval/60))
+        
+            #plt.subplot(2,1,2)
+            #plt.tight_layout(pad=4.0)    
             ay.clear()
             ay.xaxis.set_major_locator(MultipleLocator(int((ani.interval/60)*5)))
             ay.xaxis.set_major_formatter(FormatStrFormatter('%d'))
@@ -228,12 +250,10 @@ def animate(x, ani = None):
             
             ay.plot(xs, zs, '*-')
             ay.grid()
-            
-            plt.subplot(2,1,2)
-            plt.tight_layout(pad=4.0)
+        
             #plt.xticks(np.arange(min(xs), max(xs)+1, step=int(ani.interval/60)*5),rotation=45, ha='right')
-            plt.title('Presence Count')
-            plt.ylabel('Presence / {}min'.format(ani.interval/60))
+            ay.set_title('Presence Count')
+            ay.set_ylabel('Presence / {}min'.format(ani.interval/60))
             
 def snapshot():
     timenow = datetime.datetime.now().strftime("%m%d%y-%H%M%S")
@@ -271,7 +291,7 @@ def sleek():
 
 
     # Connect to the XMPP server and start processing XMPP stanzas.
-    if xmpp.connect((OI_URL,OI_PORT),use_tls=True, use_ssl=True):
+    if xmpp.connect((OI_URL,OI_PORT),use_tls=True, use_ssl=True, reattempt=True):
         # If you do not have the dnspython library installed, you will need
         # to manually specify the name of the server if it does not match
         # the one in the JID. For example, to use Google Talk you would
