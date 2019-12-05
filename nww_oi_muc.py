@@ -140,6 +140,9 @@ def main(argv=None):
         
             ax = fig.add_subplot(2,1,1) 
             ay = fig.add_subplot(2,1,2)
+            
+            ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+            
             graph = animation.FuncAnimation(fig, animate,interval=10000, fargs=(metrics,))
             plt.tight_layout(pad=4.0)
             
@@ -204,7 +207,7 @@ def animate(x, ani = None):
             
             # For the minor ticks, use no labels; default NullFormatter.
             ax.xaxis.set_minor_locator(MultipleLocator(5))
-            ax.yaxis.set_major_locator(MultipleLocator(2))
+            #ax.yaxis.set_major_locator(MultipleLocator(2))
             
             #fmtr = StrMethodFormatter('{x:2.2f}')
             #ax.yaxis.set_major_formatter(fmtr)

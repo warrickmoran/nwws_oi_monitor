@@ -45,9 +45,9 @@ class OIMetrics_Rate(object):
         logger.debug("Rate Calculate: Member List-{}, TimeDiff-{}, TimeDiff Min-{}, Avg-{}".format(len(self.muc.member_list),timediff, timediff_min, average))
     
         if (self.avg is None):
-            self.avg = np.array([[timediff_min,'{:.2f}'.format(average),len(self.muc.member_list),socket.gethostbyname(self.muc.url),timenow.strftime("%m-%d-%y %H:%M:%S")]])
+            self.avg = np.array([[timediff_min,average,len(self.muc.member_list),socket.gethostbyname(self.muc.url),timenow.strftime("%m-%d-%y %H:%M:%S")]], dtype=object)
         else:
-            self.avg = np.append(self.avg, [[timediff_min,'{:.2f}'.format(average), len(self.muc.member_list),socket.gethostbyname(self.muc.url), timenow.strftime("%m-%d-%y %H:%M:%S")]],axis=0)
+            self.avg = np.append(self.avg, [[timediff_min,average, len(self.muc.member_list),socket.gethostbyname(self.muc.url), timenow.strftime("%m-%d-%y %H:%M:%S")]],axis=0)
         
         self.store()
         self.reset()
