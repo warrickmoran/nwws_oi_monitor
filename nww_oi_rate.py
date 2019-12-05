@@ -45,9 +45,9 @@ class OIMetrics_Rate(object):
         logger.debug("Rate Calculate: Member List-{}, TimeDiff-{}, TimeDiff Min-{}, Avg-{}".format(len(self.muc.member_list),timediff, timediff_min, average))
     
         if (self.avg is None):
-            self.avg = np.array([[timediff_min,average,len(self.muc.member_list),socket.gethostbyname(self.muc.url),timenow]])
+            self.avg = np.array([[timediff_min,'{:.2f}'.format(average),len(self.muc.member_list),socket.gethostbyname(self.muc.url),timenow.strftime("%m-%d-%y %H:%M:%S")]])
         else:
-            self.avg = np.append(self.avg, [[timediff_min,average, len(self.muc.member_list),socket.gethostbyname(self.muc.url), timenow]],axis=0)
+            self.avg = np.append(self.avg, [[timediff_min,'{:.2f}'.format(average), len(self.muc.member_list),socket.gethostbyname(self.muc.url), timenow.strftime("%m-%d-%y %H:%M:%S")]],axis=0)
         
         self.store()
         self.reset()
@@ -70,11 +70,12 @@ class OIMetrics_Rate(object):
             
     def store(self):
         if (self.avg is not None):
-            if (self.avg.shape[0] >= 5):
-                with open("presence.json", "w") as jsonFile:
-                    json.dump(self.avg.tolist(), jsonFile, separators=(',', ':'), sort_keys=True, indent=4)### this saves the array in .json format
+            jsonList = self.avg.tolist()
+            with open("presence.json", "w") as jsonFile:
+                    json.dump(jsonList, jsonFile, separators=(',', ':'), sort_keys=True, indent=4)### this saves the array in .json format
                 #header = "time, presence, server-ip"
                 #np.savetxt('presence-{}.dat'.format(datetime.datetime.now().strftime("%m%d%y-%H%M%S")), self.avg, header=header)
-                self.init() 
+                #self.init() 
+            np.savetxt("presence.csv", self.avg, delimiter=',',fmt='%s')
                 
         

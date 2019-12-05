@@ -27,7 +27,7 @@ import threading
 import datetime
 import numpy as np
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
-                               AutoMinorLocator)
+                               AutoMinorLocator, StrMethodFormatter)
 from threading import Timer
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
@@ -86,6 +86,7 @@ def main(argv=None):
         parser.add_option("-r", "--room", dest="room", help="MUC room to join", default='nwws@conference.nwws-oi.weather.gov/nwws-oi')
         parser.add_option("-n", "--nick", dest="nick", help="MUC nickname", default=gethostname())
         parser.add_option("-m", "--metrics", dest="metrics", help="display MUC metrics", action="store_true")
+        parser.add_option("-i", "--interval", dest="interval", help="MUC metrics display interval", default=5, type=int)
 
         # process options
         (opts, args) = parser.parse_args()
@@ -125,7 +126,7 @@ def main(argv=None):
         sleek_oi.start()
         
         if (opts.metrics):
-            metrics = rate.OIMetrics_Rate(xmpp)
+            metrics = rate.OIMetrics_Rate(xmpp, opts.interval)
             
             global fig
             fig = plt.figure()
@@ -183,8 +184,8 @@ def animate(x, ani = None):
             ys = ani.avg[:100, 1]
             zs = ani.avg[:100, 2]
             
-            xs.sort()
-            ys.sort()
+            #xs.sort()
+            #ys.sort()
             
             global oi_ip_1
             global oi_ip_2
@@ -199,12 +200,16 @@ def animate(x, ani = None):
             # Draw x and y lists
             ax.clear()
             ax.xaxis.set_major_locator(MultipleLocator(int((ani.interval/60)*5)))
-            ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
+            #ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
             
             # For the minor ticks, use no labels; default NullFormatter.
             ax.xaxis.set_minor_locator(MultipleLocator(5))
-            ax.yaxis.set_minor_locator(MultipleLocator(5))
-            ax.yaxis.set_minor_formatter(FormatStrFormatter('%.2f'))
+            ax.yaxis.set_major_locator(MultipleLocator(2))
+            
+            #fmtr = StrMethodFormatter('{x:2.2f}')
+            #ax.yaxis.set_major_formatter(fmtr)
+            #ax.yaxis.set_minor_formatter(fmtr)
+            #ax.yaxis.set_major_formatter(FormatStrFormatter('%0.2f'))
             #ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
             ax.set_title('Average Product Ingest Rate')
             ax.set_ylabel('Products / {}min'.format(ani.interval/60))
@@ -242,7 +247,8 @@ def animate(x, ani = None):
             #plt.tight_layout(pad=4.0)    
             ay.clear()
             ay.xaxis.set_major_locator(MultipleLocator(int((ani.interval/60)*5)))
-            ay.xaxis.set_major_formatter(FormatStrFormatter('%d'))
+            #ay.xaxis.set_major_formatter(FormatStrFormatter('%d'))
+            #ay.yaxis.set_minor_formatter(FormatStrFormatter('%d'))
             
 
             # For the minor ticks, use no labels; default NullFormatter.

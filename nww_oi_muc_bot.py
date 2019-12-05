@@ -72,7 +72,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
 
     def onX(self, msg):
         self.event('custom_action', msg)
-        logger.debug("Received Custom Action: {}", (msg))
+        logger.debug("Received Custom Action: {}".format(msg))
 
     def start(self, event):
         """
@@ -190,7 +190,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
         #                      mtype='groupchat')
         #print("Received Message: {}".format(msg['body']))
         self.product_count += 1
-        logger.info("Product Content: {}".format(msg['x']))
+        cccc = msg['x'].xml.attrib['cccc']
+        ttaaii = msg['x'].xml.attrib['ttaaii']
+        issue = msg['x'].xml.attrib['issue']
+        awipsid = msg['x'].xml.attrib['awipsid']
+        
+        logger.info("Product Content: {} {} {} {}".format(ttaaii,cccc,issue,awipsid))
 
     def muc_online(self, presence):
         """
@@ -204,13 +209,13 @@ class MUCBot(sleekxmpp.ClientXMPP):
                         documentation for the Presence stanza
                         to see how else it may be used.
         """
-        logger.info("Online {}".format(presence['from']))
+        logger.debug("Online {}".format(presence['from']))
         if not presence['from'].__str__() in self.member_list:
             self.member_list.append(presence['from'].__str__())
             logger.debug("{},{},{}".format(socket.gethostbyname(self.url),len(self.member_list),self.member_list))
             
     def muc_offline(self, presence):
-        logger.info("Offline {}".format(presence['from']))
+        logger.debug("Offline {}".format(presence['from']))
         
         if presence['from'].__str__() in self.member_list:
                 self.member_list.remove(presence['from'].__str__())
