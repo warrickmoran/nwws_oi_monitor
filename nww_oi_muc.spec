@@ -3,8 +3,8 @@
 block_cipher = None
 
 
-a = Analysis(['../nww_oi_muc.py', '../nww_oi_muc_bot.py', '../nww_oi_rate.py'],
-             pathex=['/home/warrick.moran/eclipse-ml/nww_oi'],
+a = Analysis(['../nww_oi_muc.py', '../nww_oi_muc_bot.py', '../nww_oi_rate.py', '../nww_oi_muc_stanza.py'],
+             pathex=['.'],
              binaries=[],
              datas=[],
              hiddenimports=['sleekxmpp.features', 'sleekxmpp.features.feature_starttls', 'sleekxmpp.features.feature_bind', 'sleekxmpp.features.feature_session', 'sleekxmpp.features.feature_bind', 'sleekxmpp.features.feature_rosterver', 'sleekxmpp.features.feature_mechanisms', 'sleekxmpp.features.feature_preapproval', 'sleekxmpp.plugins.xep_0004', 'sleekxmpp.plugins.xep_0030', 'sleekxmpp.plugins.xep_0045', 'sleekxmpp.plugins.xep_0199'],

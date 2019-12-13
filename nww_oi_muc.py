@@ -145,7 +145,7 @@ def main(argv=None):
             
             graph = animation.FuncAnimation(fig, animate,interval=10000, fargs=(metrics,))
             plt.tight_layout(pad=4.0)
-            
+
             plt.show()
 
     except Exception as e:
@@ -187,40 +187,27 @@ def animate(x, ani = None):
             ys = ani.avg[:100, 1]
             zs = ani.avg[:100, 2]
             
-            #xs.sort()
-            #ys.sort()
-            
             global oi_ip_1
             global oi_ip_2
             oi_ip_1 = None
             oi_ip_2 = None
             
-            # Format plot
-            #plt.subplot(2,1,1)
-            
-            #plt.tight_layout(pad=4.0)
-            
+            # Format plot    
             # Draw x and y lists
             ax.clear()
             ax.xaxis.set_major_locator(MultipleLocator(int((ani.interval/60)*5)))
-            #ax.xaxis.set_major_formatter(FormatStrFormatter('%d'))
+       
             
             # For the minor ticks, use no labels; default NullFormatter.
             ax.xaxis.set_minor_locator(MultipleLocator(5))
-            #ax.yaxis.set_major_locator(MultipleLocator(2))
-            
-            #fmtr = StrMethodFormatter('{x:2.2f}')
-            #ax.yaxis.set_major_formatter(fmtr)
-            #ax.yaxis.set_minor_formatter(fmtr)
-            #ax.yaxis.set_major_formatter(FormatStrFormatter('%0.2f'))
-            #ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+          
             ax.set_title('Average Product Ingest Rate')
             ax.set_ylabel('Products / {}min'.format(ani.interval/60))
+            ax.tick_params(axis='x', rotation=30)
             
             
             ax.plot(xs, ys, 'o-')
 
-            #ax.xaxis.set_ticks(np.arange(start, end, (ani.interval/60)*5))
             ax.grid()
             for x in ani.avg:
                 if (oi_ip_1 is None):
@@ -239,28 +226,17 @@ def animate(x, ani = None):
                                 horizontalalignment='left', verticalalignment='bottom')
                     break;
 
-            # Format plot
-            #plt.subplot(2,1,1)
-            #plt.tight_layout(pad=4.0)
-            
-            #plt.title('Average Product Ingest Rate')
-            #plt.ylabel('Products / {}min'.format(ani.interval/60))
-        
-            #plt.subplot(2,1,2)
-            #plt.tight_layout(pad=4.0)    
+            # Format plot 
             ay.clear()
-            ay.xaxis.set_major_locator(MultipleLocator(int((ani.interval/60)*5)))
-            #ay.xaxis.set_major_formatter(FormatStrFormatter('%d'))
-            #ay.yaxis.set_minor_formatter(FormatStrFormatter('%d'))
-            
+            ay.xaxis.set_major_locator(MultipleLocator(int((ani.interval/60)*5))) 
 
             # For the minor ticks, use no labels; default NullFormatter.
             ay.xaxis.set_minor_locator(MultipleLocator(5))
+            ay.tick_params(axis='x', rotation=30)
             
             ay.plot(xs, zs, '*-')
             ay.grid()
         
-            #plt.xticks(np.arange(min(xs), max(xs)+1, step=int(ani.interval/60)*5),rotation=45, ha='right')
             ay.set_title('Presence Count')
             ay.set_ylabel('Presence / {}min'.format(ani.interval/60))
             
