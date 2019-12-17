@@ -183,9 +183,17 @@ def setup_logging(default_path='./logging.yaml', default_level=logging.INFO, env
 def animate(x, ani = None):
         # Limit x and y lists to 20 items
         if (ani.avg is not None):
-            xs = ani.avg[:100, 0]
-            ys = ani.avg[:100, 1]
-            zs = ani.avg[:100, 2]
+            
+            (row, column) = ani.avg.shape;
+            
+            if (row < 100):
+                xs = ani.avg[:100, 0]
+                ys = ani.avg[:100, 1]
+                zs = ani.avg[:100, 2]
+            else:
+                xs = ani.avg[:-100, 0]
+                ys = ani.avg[:-100, 1]
+                zs = ani.avg[:-100, 2]
             
             global oi_ip_1
             global oi_ip_2
