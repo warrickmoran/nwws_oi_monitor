@@ -3,7 +3,7 @@ Created on Dec 3, 2019
 
 @author: warrick.moran
 '''
-from sleekxmpp.xmlstream.stanzabase import ElementBase
+from slixmpp.xmlstream.stanzabase import ElementBase
 
 class X(ElementBase):
     namespace = 'nwws-oi'
@@ -11,4 +11,5 @@ class X(ElementBase):
     plugin_attrib = 'x'
     interfaces = set(('cccc', 'ttaaii', 'issue', 'awipsid', 'id'))
     sub_interfaces = interfaces
+
         

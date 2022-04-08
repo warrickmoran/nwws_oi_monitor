@@ -10,7 +10,7 @@ formatters:
 handlers:
     console:
         class: logging.StreamHandler
-        level: DEBUG
+        level: INFO
         formatter: standard
         stream: ext://sys.stdout
 
@@ -70,7 +70,7 @@ handlers:
         encoding: utf8
 
 root:
-    level: DEBUG
+    level: INFO
     handlers: [console]
     propogate: yes
 
@@ -84,13 +84,23 @@ loggers:
         level: DEBUG
         handlers: [console, info_file_handler, error_file_handler, critical_file_handler, debug_file_handler, warn_file_handler]
         propogate: yes
+
+    nww_oi_ldm_encoder:
+        level: DEBUG
+        handlers: [console, info_file_handler, error_file_handler, critical_file_handler, debug_file_handler, warn_file_handler]
+        propogate: yes
+
+    nww_oi_muc_slibot:
+        level: INFO
+        handlers: [console, info_file_handler, error_file_handler, critical_file_handler, debug_file_handler, warn_file_handler]
+        propogate: yes
         
     nww_oi_rate:
         level: DEBUG
         handlers: [console, info_file_handler, error_file_handler, critical_file_handler, debug_file_handler, warn_file_handler]
         propogate: yes
         
-    sleekxmpp:
+    slixmpp:
         level: DEBUG
         handlers: [console, info_file_handler, error_file_handler, critical_file_handler, debug_file_handler, warn_file_handler]
         propogate: yes

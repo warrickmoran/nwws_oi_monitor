@@ -1,35 +1,35 @@
-# nwws_oi_monitor
+# nwwsoi-ldm
+
+## Prerequisite
+* LDMD
+* Python +3.8
 
 ## Python Requirements
-* Version +3.6
+* Version +3.8
 * Packages
-** sleekxmpp
-** matplotlib
-** numpy
-** pyinstaller (if creating executable)
+* slixmpp
+* libpython-static
+* psutil
+* nuitka (if creating executable)
 
-## Python Linux OS Requirements
-* python3-tkinter
-* python3-devel
-*
+## Conda VirtEnv Setup (optional)
+* conda create --name nwws python=3.8 slixmpp libpython-static nuitka pyyaml coloredlogs psutil patchelf
 
+## Additional Requirements Under RedHat 8 to remove libpython linking issues
+* sudo dnf install gcc-toolset-9-binutils-devel
 
+## Enable GCC-Toolset-9
+* scl enable gcc-toolset-9 bash
 
-## Executable creation using pyinstaller 
+## Activate VirtEnv "nwws"
+* (if using conda) conda activate nwws
 
-Note:
-spec file must include: 
-hiddenimports=['sleekxmpp.features', 'sleekxmpp.features.feature_starttls', 'sleekxmpp.features.feature_bind', 'sleekxmpp.features.feature_session', 'sleekxmpp.features.feature_bind', 'sleekxmpp.features.feature_rosterver', 'sleekxmpp.features.feature_mechanisms', 'sleekxmpp.features.feature_preapproval', 'sleekxmpp.plugins.xep_0004', 'sleekxmpp.plugins.xep_0030', 'sleekxmpp.plugins.xep_0045', 'sleekxmpp.plugins.xep_0199'],
-            
-* mkdir deployment
-* cd deployment
-* pyinstaller -F nww_oi_muc.spec 
+## Executable creation using Nuitka 
+* python -m nuitka --standalone --include-package-data=slixmpp --remove-output nwwsoi-ldm.py
 
+## Move to /opt
+* sudo cp -R \<repository\>/nwwsoi-ldm/nwwsoi-ldm.dist /opt/nwwsoi_ldm
+* sudo chown -R ldm:ldm /opt/nwwsoi_ldm
 
 ## Command Line Execution 
-
-`./dist/nww_oi_muc --jid=<user id> --password=<password>`
-
-## Command Line Execution with Visualization
-
-`./dist/nww_oi_muc --jid=<user id> --password=<password> --metrics`
+`/opt/nwwsoi_ldm/nwwsoi-ldm --jid=<user id> --password=<password> --ldm`
